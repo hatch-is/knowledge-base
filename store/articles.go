@@ -10,9 +10,9 @@ import (
 type Article struct {
 	ID            bson.ObjectId   `bson:"_id,omitempty"json:"id"`
 	Deleted       bool            `bson:"deleted"json:"deleted"validate:"omitempty"`
-	Subject       string          `bson:"subject"json:"subject"validate:"required"`
+	Subject       string          `bson:"subject"json:"subject"validate:"required,min=2,max=160"`
 	Body          string          `bson:"body"json:"body"validate:"required"`
-	Summary       string          `bson:"summary"json:"summary"validate:"omitempty"`
+	Summary       string          `bson:"summary"json:"summary"validate:"omitempty,min=2,max=300"`
 	CreatedDate   time.Time       `bson:"createdDate"json:"createdDate"`
 	ModifiedDate  time.Time       `bson:"modifiedDate"json:"modifiedDate"`
 	Tags          []string        `bson:"tags"json:"tags"validate:"omitempty"`
