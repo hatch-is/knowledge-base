@@ -140,3 +140,11 @@ func (artModel *ArticlesModel) Update(qID string, data io.ReadCloser) (result st
 	}
 	return result, nil
 }
+
+func (artModel *ArticlesModel) Delete(qID string) (err error) {
+	ID := bson.ObjectIdHex(qID)
+	artDb := store.ArticlesCollectionConnect()
+	err = artDb.Delete(ID)
+
+	return
+}

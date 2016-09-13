@@ -59,6 +59,12 @@ func CreateRoutes() Routes {
 			articlesWebAction.Update,
 		},
 		Route{
+			"Update",
+			"DELETE",
+			"/knowledge/articles/{id}",
+			articlesWebAction.Delete,
+		},
+		Route{
 			"AllTags",
 			"GET",
 			"/knowledge/tags",

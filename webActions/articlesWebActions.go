@@ -72,3 +72,18 @@ func (art *ArticlesWebActions) Update(w http.ResponseWriter, r *http.Request) {
 		ResponseWithJSON(w, result, 200)
 	}
 }
+
+//Delete entry by ID
+func (art *ArticlesWebActions) Delete(w http.ResponseWriter, r *http.Request) {
+
+	ID := mux.Vars(r)["id"]
+
+	err := art.model.Delete(ID)
+
+	if err != nil {
+		ErrorWithJSON(w, err.Error(), 404)
+	} else {
+		result, _ := json.Marshal("")
+		ResponseWithJSON(w, result, 200)
+	}
+}

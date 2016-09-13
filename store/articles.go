@@ -126,3 +126,24 @@ func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (result A
 
 	return entry, nil
 }
+
+//Delete entry from Articles collection (soft delete)
+func (art *ArticlesCollection) Delete(ID bson.ObjectId) (err error) {
+	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
+	if err != nil {
+		return
+	}
+	defer session.Close()
+	query := bson.M{
+		"_id": ID,
+	}
+	change := bson.M{
+		"$set": bson.M{
+			"deleted":      true,
+			"modifiedDate": time.Now().UTC(),
+		},
+	}
+
+	err = artCollection.Update(query, change)
+	return
+}
