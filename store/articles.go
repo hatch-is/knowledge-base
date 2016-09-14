@@ -18,6 +18,7 @@ type Article struct {
 	Tags          []string        `bson:"tags"json:"tags"validate:"omitempty"`
 	Attachments   []string        `bson:"attachments"json:"attachments"validate:"omitempty"`
 	CustomeFields []CustomeFields `bson:"customeFields"json:"customeFields"validate:"omitempty"`
+	Score         float64         `bson:"score",json:"score"`
 }
 
 //CustomeFields store custome fields for article
@@ -146,4 +147,32 @@ func (art *ArticlesCollection) Delete(ID bson.ObjectId) (err error) {
 
 	err = artCollection.Update(query, change)
 	return
+}
+
+//Search implement full-text search
+func (art *ArticlesCollection) Search(q string) (result []Article, err error) {
+	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
+	if err != nil {
+		return
+	}
+	defer session.Close()
+	query := bson.M{
+		"deleted": false,
+		"$text": bson.M{
+			"$search": q,
+		},
+	}
+	fields := bson.M{
+		"score": bson.M{
+			"$meta": "textScore",
+		},
+	}
+	sort := "$textScore:score"
+
+	err = artCollection.Find(query).Select(fields).Sort(sort).All(&result)
+	if err != nil {
+		return
+	}
+
+	return result, nil
 }

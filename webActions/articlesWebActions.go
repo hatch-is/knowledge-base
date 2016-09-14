@@ -18,8 +18,9 @@ func (art *ArticlesWebActions) Read(w http.ResponseWriter, r *http.Request) {
 	skip := r.URL.Query().Get("skip")
 	limit := r.URL.Query().Get("limit")
 	filter := r.URL.Query().Get("filter")
+	q := r.URL.Query().Get("q")
 
-	data, err := art.model.Read(filter, skip, limit)
+	data, err := art.model.Read(filter, skip, limit, q)
 
 	if err != nil {
 		ErrorWithJSON(w, err.Error(), 404)

@@ -35,6 +35,11 @@ func (c *MongoConnection) createConnection() (err error) {
 	} else {
 		fmt.Printf("Error occured while creating mongodb connection: %s", err.Error())
 	}
+	index := mgo.Index{
+		Key: []string{"$text:subject", "$text:tags"},
+	}
+	err = c.originalSession.DB(conf.Config.DB.Name).C("Articles").EnsureIndex(index)
+
 	return
 }
 

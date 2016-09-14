@@ -15,23 +15,26 @@ import (
 type ArticlesModel struct{}
 
 //Read get articles
-func (artModel *ArticlesModel) Read(qFilter string, qSkip string, qLimit string) (result []store.Article, err error) {
-	query := artModel.convertFilter(qFilter)
-	query["deleted"] = false
-
-	fields := bson.M{}
-
-	skip, err := strconv.Atoi(qSkip)
-	if err != nil {
-		skip = 0
-	}
-	limit, err := strconv.Atoi(qLimit)
-	if err != nil {
-		limit = 0
-	}
-
+func (artModel *ArticlesModel) Read(qFilter string, qSkip string, qLimit string, q string) (result []store.Article, err error) {
 	artDb := store.ArticlesCollectionConnect()
-	result, err = artDb.Read(query, fields, skip, limit)
+	if len(q) == 0 {
+		query := artModel.convertFilter(qFilter)
+		query["deleted"] = false
+
+		fields := bson.M{}
+
+		skip, err := strconv.Atoi(qSkip)
+		if err != nil {
+			skip = 0
+		}
+		limit, err := strconv.Atoi(qLimit)
+		if err != nil {
+			limit = 0
+		}
+		result, err = artDb.Read(query, fields, skip, limit)
+	} else {
+		result, err = artDb.Search(q)
+	}
 
 	if err != nil {
 		return
