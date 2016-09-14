@@ -96,7 +96,7 @@ func (art *ArticlesCollection) Create(entry Article) (result Article, err error)
 }
 
 //Update existing entry
-func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (result Article, err error) {
+func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (err error) {
 	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
 	if err != nil {
 		return
@@ -124,7 +124,7 @@ func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (result A
 		return
 	}
 
-	return entry, nil
+	return nil
 }
 
 //Delete entry from Articles collection (soft delete)

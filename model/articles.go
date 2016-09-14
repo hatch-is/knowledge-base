@@ -137,14 +137,20 @@ func (artModel *ArticlesModel) Update(qID string, data io.ReadCloser) (result st
 	}
 
 	artDb := store.ArticlesCollectionConnect()
-	result, err = artDb.Update(ID, article)
+	err = artDb.Update(ID, article)
 
 	if err != nil {
 		return
 	}
 	tagModel := TagsModel{}
 	go tagModel.CampareAndCreate(result.Tags)
-
+	query := bson.M{
+		"_id": ID,
+	}
+	result, err = artDb.ReadOne(query, bson.M{})
+	if err != nil {
+		return
+	}
 	return result, nil
 }
 
