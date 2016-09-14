@@ -1,3 +1,3 @@
 # knowledge-base
 
-server works on port 3810
+server works on port :3810
