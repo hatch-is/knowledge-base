@@ -104,11 +104,12 @@ func (artModel *ArticlesModel) Create(data io.ReadCloser) (result store.Article,
 
 	artDb := store.ArticlesCollectionConnect()
 	result, err = artDb.Create(article)
-	tagModel := TagsModel{}
-	go tagModel.CampareAndCreate(result.Tags)
+
 	if err != nil {
 		return
 	}
+	tagModel := TagsModel{}
+	go tagModel.CampareAndCreate(result.Tags)
 	return result, nil
 }
 
@@ -138,9 +139,13 @@ func (artModel *ArticlesModel) Update(qID string, data io.ReadCloser) (result st
 	if err != nil {
 		return
 	}
+	tagModel := TagsModel{}
+	go tagModel.CampareAndCreate(result.Tags)
+
 	return result, nil
 }
 
+//Delete article by ID
 func (artModel *ArticlesModel) Delete(qID string) (err error) {
 	ID := bson.ObjectIdHex(qID)
 	artDb := store.ArticlesCollectionConnect()

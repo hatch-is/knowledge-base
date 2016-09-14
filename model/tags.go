@@ -6,12 +6,16 @@ import "knowledge-base/store"
 type TagsModel struct{}
 
 //All get all tags
-func (tagModel *TagsModel) All() (result []store.Tag, err error) {
+func (tagModel *TagsModel) All() (result []string, err error) {
 	tagDb := store.TagsCollectionConnect()
-	result, err = tagDb.All()
+	tags, err := tagDb.All()
 
+	result = make([]string, 0)
 	if err != nil {
 		return
+	}
+	for _, tag := range tags {
+		result = append(result, tag.Name)
 	}
 	return result, nil
 }
