@@ -3,6 +3,8 @@ package webActions
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/getsentry/raven-go"
 )
 
 //ResponseWithJSON return Response
@@ -16,6 +18,7 @@ func ResponseWithJSON(w http.ResponseWriter, json []byte, code int) {
 func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(code)
+	raven.CaptureMessage(message, nil, nil)
 	fmt.Fprintf(w, `{"result":"","message":%q}`, message)
 }
 

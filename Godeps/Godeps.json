@@ -9,6 +9,15 @@
 			"Rev": "f0aeabca5a127c4078abb8c8d64298b147264b55"
 		},
 		{
+			"ImportPath": "github.com/certifi/gocertifi",
+			"Comment": "2016.08.31",
+			"Rev": "ec89d50f00d39494f5b3ec5cf2fe75c53467a937"
+		},
+		{
+			"ImportPath": "github.com/getsentry/raven-go",
+			"Rev": "379f8d0a68ca237cf8893a1cdfd4f574125e2c51"
+		},
+		{
 			"ImportPath": "github.com/gorilla/context",
 			"Comment": "v1.1-4-gaed02d1",
 			"Rev": "aed02d124ae4a0e94fea4541c8effd05bf0c8296"

@@ -1,17 +1,22 @@
 package conf
 
 import (
+	"github.com/getsentry/raven-go"
 	"github.com/jinzhu/configor"
 )
 
 //Config save all config data
 var Config = struct {
 	DB struct {
-		Host string `default:"192.168.99.100"`
-		Name string `default:"knowledge"`
+		Host string
+		Name string
+	}
+	SENTRY struct {
+		DNS string
 	}
 }{}
 
 func init() {
 	configor.Load(&Config)
+	raven.SetDSN(Config.SENTRY.DNS)
 }
