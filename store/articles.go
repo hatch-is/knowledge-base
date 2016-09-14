@@ -168,7 +168,7 @@ func (art *ArticlesCollection) Search(q string) (result []Article, err error) {
 		},
 	}
 	sort := "$textScore:score"
-
+	result = make([]Article, 0)
 	err = artCollection.Find(query).Select(fields).Sort(sort).All(&result)
 	if err != nil {
 		return
