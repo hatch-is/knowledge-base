@@ -18,7 +18,6 @@ type Article struct {
 	Tags          []string        `bson:"tags"json:"tags"validate:"omitempty"`
 	Attachments   []string        `bson:"attachments"json:"attachments"validate:"omitempty"`
 	CustomeFields []CustomeFields `bson:"customeFields"json:"customeFields"validate:"omitempty"`
-	Score         float64         `bson:"score",json:"score"`
 }
 
 //CustomeFields store custome fields for article
