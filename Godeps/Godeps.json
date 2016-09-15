@@ -9,6 +9,10 @@
 			"Rev": "f0aeabca5a127c4078abb8c8d64298b147264b55"
 		},
 		{
+			"ImportPath": "github.com/Jeffail/gabs",
+			"Rev": "855034b6b7a3b7144977efcaefe72d2c64b0d039"
+		},
+		{
 			"ImportPath": "github.com/certifi/gocertifi",
 			"Comment": "2016.08.31",
 			"Rev": "ec89d50f00d39494f5b3ec5cf2fe75c53467a937"
