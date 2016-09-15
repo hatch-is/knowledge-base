@@ -63,8 +63,8 @@ func (artModel *ArticlesModel) ReadOne(qID string) (result store.Article, err er
 
 func (artModel *ArticlesModel) convertFilter(filter string) bson.M {
 	var m map[string]map[string]map[string]interface{}
-
 	json.Unmarshal([]byte(filter), &m)
+
 	q := bson.M{"$and": []bson.M{}}
 	for key, value := range m {
 		if key == "where" {
@@ -75,6 +75,14 @@ func (artModel *ArticlesModel) convertFilter(filter string) bson.M {
 						if err == nil {
 							q["$and"] = append(q["$and"].([]bson.M), bson.M{field: bson.M{"$" + k: t}})
 						}
+					}
+					if k == "in" {
+						var ids []bson.ObjectId
+						ids = make([]bson.ObjectId, 0)
+						for _, id := range v.([]interface{}) {
+							ids = append(ids, bson.ObjectIdHex(id.(string)))
+						}
+						q["$and"] = append(q["$and"].([]bson.M), bson.M{field: bson.M{"$" + k: ids}})
 					}
 				}
 			}
