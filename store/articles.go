@@ -149,18 +149,13 @@ func (art *ArticlesCollection) Delete(ID bson.ObjectId) (err error) {
 }
 
 //Search implement full-text search
-func (art *ArticlesCollection) Search(q string) (result []Article, err error) {
+func (art *ArticlesCollection) Search(q bson.M) (result []Article, err error) {
 	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
 	if err != nil {
 		return
 	}
 	defer session.Close()
-	query := bson.M{
-		"deleted": false,
-		"$text": bson.M{
-			"$search": q,
-		},
-	}
+
 	fields := bson.M{
 		"score": bson.M{
 			"$meta": "textScore",
@@ -168,7 +163,7 @@ func (art *ArticlesCollection) Search(q string) (result []Article, err error) {
 	}
 	sort := "$textScore:score"
 	result = make([]Article, 0)
-	err = artCollection.Find(query).Select(fields).Sort(sort).All(&result)
+	err = artCollection.Find(q).Select(fields).Sort(sort).All(&result)
 	if err != nil {
 		return
 	}

@@ -5,8 +5,8 @@ import (
 	"io"
 	"knowledge-base/store"
 	"strconv"
-	"time"
 
+	"github.com/Jeffail/gabs"
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -15,11 +15,15 @@ import (
 type ArticlesModel struct{}
 
 //Read get articles
-func (artModel *ArticlesModel) Read(qFilter string, qSkip string, qLimit string, q string) (result []store.Article, err error) {
+func (artModel *ArticlesModel) Read(qFilter string, qSkip string, qLimit string) (result []store.Article, err error) {
 	artDb := store.ArticlesCollectionConnect()
-	if len(q) == 0 {
-		query := artModel.convertFilter(qFilter)
-		query["deleted"] = false
+
+	query, isSort, err := artModel.convertFilter(qFilter)
+	if err != nil {
+		return
+	}
+	query["deleted"] = false
+	if isSort == false {
 
 		fields := bson.M{}
 
@@ -33,7 +37,7 @@ func (artModel *ArticlesModel) Read(qFilter string, qSkip string, qLimit string,
 		}
 		result, err = artDb.Read(query, fields, skip, limit)
 	} else {
-		result, err = artDb.Search(q)
+		result, err = artDb.Search(query)
 	}
 
 	if err != nil {
@@ -61,37 +65,33 @@ func (artModel *ArticlesModel) ReadOne(qID string) (result store.Article, err er
 	return result, nil
 }
 
-func (artModel *ArticlesModel) convertFilter(filter string) bson.M {
-	var m map[string]map[string]map[string]interface{}
-	json.Unmarshal([]byte(filter), &m)
-
-	q := bson.M{"$and": []bson.M{}}
-	for key, value := range m {
-		if key == "where" {
-			for field, data := range value {
-				for k, v := range data {
-					if k == "lte" || k == "lt" || k == "gte" || k == "gt" {
-						t, err := time.Parse(time.RFC3339, v.(string))
-						if err == nil {
-							q["$and"] = append(q["$and"].([]bson.M), bson.M{field: bson.M{"$" + k: t}})
-						}
-					}
-					if k == "in" {
-						var ids []bson.ObjectId
-						ids = make([]bson.ObjectId, 0)
-						for _, id := range v.([]interface{}) {
-							ids = append(ids, bson.ObjectIdHex(id.(string)))
-						}
-						q["$and"] = append(q["$and"].([]bson.M), bson.M{field: bson.M{"$" + k: ids}})
-					}
-				}
+func (artModel *ArticlesModel) convertFilter(filter string) (q bson.M, isSearch bool, err error) {
+	jParsed, err := gabs.ParseJSON([]byte(filter))
+	isSearch = false
+	if err == nil {
+		q = bson.M{"$and": []bson.M{}}
+		IDs, err := jParsed.S("where", "id", "in").Children()
+		if err == nil {
+			var ids []bson.ObjectId
+			ids = make([]bson.ObjectId, 0)
+			for _, id := range IDs {
+				ids = append(ids, bson.ObjectIdHex(id.Data().(string)))
+			}
+			if len(ids) > 0 {
+				q["$and"] = append(q["$and"].([]bson.M), bson.M{"_id": bson.M{"$in": ids}})
 			}
 		}
+		search, ok := jParsed.S("where", "search").Data().(string)
+		if ok == true {
+			isSearch = true
+			q["$and"] = append(q["$and"].([]bson.M), bson.M{"$text": bson.M{"$search": search}})
+		}
+		if cap(q["$and"].([]bson.M)) < 1 {
+			return bson.M{}, false, nil
+		}
+		return q, isSearch, nil
 	}
-	if cap(q["$and"].([]bson.M)) < 1 {
-		return bson.M{}
-	}
-	return q
+	return
 }
 
 //Create add new article
