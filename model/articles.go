@@ -66,32 +66,34 @@ func (artModel *ArticlesModel) ReadOne(qID string) (result store.Article, err er
 }
 
 func (artModel *ArticlesModel) convertFilter(filter string) (q bson.M, isSearch bool, err error) {
-	jParsed, err := gabs.ParseJSON([]byte(filter))
-	isSearch = false
-	if err == nil {
-		q = bson.M{"$and": []bson.M{}}
-		IDs, err := jParsed.S("where", "id", "in").Children()
+	if filter != "" {
+		jParsed, err := gabs.ParseJSON([]byte(filter))
+		isSearch = false
 		if err == nil {
-			var ids []bson.ObjectId
-			ids = make([]bson.ObjectId, 0)
-			for _, id := range IDs {
-				ids = append(ids, bson.ObjectIdHex(id.Data().(string)))
+			q = bson.M{"$and": []bson.M{}}
+			IDs, err := jParsed.S("where", "id", "in").Children()
+			if err == nil {
+				var ids []bson.ObjectId
+				ids = make([]bson.ObjectId, 0)
+				for _, id := range IDs {
+					ids = append(ids, bson.ObjectIdHex(id.Data().(string)))
+				}
+				if len(ids) > 0 {
+					q["$and"] = append(q["$and"].([]bson.M), bson.M{"_id": bson.M{"$in": ids}})
+				}
 			}
-			if len(ids) > 0 {
-				q["$and"] = append(q["$and"].([]bson.M), bson.M{"_id": bson.M{"$in": ids}})
+			search, ok := jParsed.S("where", "search").Data().(string)
+			if ok == true {
+				isSearch = true
+				q["$and"] = append(q["$and"].([]bson.M), bson.M{"$text": bson.M{"$search": search}})
 			}
+			if cap(q["$and"].([]bson.M)) < 1 {
+				return bson.M{}, false, nil
+			}
+			return q, isSearch, nil
 		}
-		search, ok := jParsed.S("where", "search").Data().(string)
-		if ok == true {
-			isSearch = true
-			q["$and"] = append(q["$and"].([]bson.M), bson.M{"$text": bson.M{"$search": search}})
-		}
-		if cap(q["$and"].([]bson.M)) < 1 {
-			return bson.M{}, false, nil
-		}
-		return q, isSearch, nil
 	}
-	return
+	return bson.M{}, false, nil
 }
 
 //Create add new article
