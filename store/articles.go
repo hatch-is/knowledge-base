@@ -8,20 +8,20 @@ import (
 
 //Article store article
 type Article struct {
-	ID            bson.ObjectId   `bson:"_id,omitempty"json:"id"`
-	Deleted       bool            `bson:"deleted"json:"deleted"validate:"omitempty"`
-	Subject       string          `bson:"subject"json:"subject"validate:"required,min=2,max=160"`
-	Body          string          `bson:"body"json:"body"validate:"required"`
-	Summary       string          `bson:"summary"json:"summary"validate:"omitempty,min=2,max=300"`
-	CreatedDate   time.Time       `bson:"createdDate"json:"createdDate"`
-	ModifiedDate  time.Time       `bson:"modifiedDate"json:"modifiedDate"`
-	Tags          []string        `bson:"tags"json:"tags"validate:"omitempty"`
-	Attachments   []string        `bson:"attachments"json:"attachments"validate:"omitempty"`
-	CustomeFields []CustomeFields `bson:"customeFields"json:"customeFields"validate:"omitempty"`
+	ID           bson.ObjectId  `bson:"_id,omitempty"json:"id"`
+	Deleted      bool           `bson:"deleted"json:"deleted"validate:"omitempty"`
+	Subject      string         `bson:"subject"json:"subject"validate:"required,min=2,max=160"`
+	Body         string         `bson:"body"json:"body"validate:"required"`
+	Summary      string         `bson:"summary"json:"summary"validate:"omitempty,min=2,max=300"`
+	CreatedDate  time.Time      `bson:"createdDate"json:"createdDate"`
+	ModifiedDate time.Time      `bson:"modifiedDate"json:"modifiedDate"`
+	Tags         []string       `bson:"tags"json:"tags"validate:"omitempty"`
+	Attachments  []string       `bson:"attachments"json:"attachments"validate:"omitempty"`
+	CustomFields []CustomFields `bson:"customFields"json:"customFields"validate:"omitempty"`
 }
 
-//CustomeFields store custome fields for article
-type CustomeFields struct {
+//CustomFields store custome fields for article
+type CustomFields struct {
 	Key   string `bson:"key"json:"key"validate:"omitempty"`
 	Value string `bson:"value"json:"value"validate:"omitempty"`
 }
@@ -108,14 +108,14 @@ func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (err erro
 	}
 	change := bson.M{
 		"$set": bson.M{
-			"deleted":       entry.Deleted,
-			"subject":       entry.Subject,
-			"body":          entry.Body,
-			"summary":       entry.Summary,
-			"modifiedDate":  entry.ModifiedDate,
-			"tags":          entry.Tags,
-			"attachments":   entry.Attachments,
-			"customeFields": entry.CustomeFields,
+			"deleted":      entry.Deleted,
+			"subject":      entry.Subject,
+			"body":         entry.Body,
+			"summary":      entry.Summary,
+			"modifiedDate": entry.ModifiedDate,
+			"tags":         entry.Tags,
+			"attachments":  entry.Attachments,
+			"customFields": entry.CustomFields,
 		},
 	}
 
