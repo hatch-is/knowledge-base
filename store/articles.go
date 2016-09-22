@@ -16,8 +16,14 @@ type Article struct {
 	CreatedDate  time.Time      `bson:"createdDate"json:"createdDate"`
 	ModifiedDate time.Time      `bson:"modifiedDate"json:"modifiedDate"`
 	Tags         []string       `bson:"tags"json:"tags"validate:"omitempty"`
-	Attachments  []string       `bson:"attachments"json:"attachments"validate:"omitempty"`
+	Attachments  []Attachment   `bson:"attachments"json:"attachments"validate:"omitempty"`
 	CustomFields []CustomFields `bson:"customFields"json:"customFields"validate:"omitempty"`
+}
+
+//Attachment store link and file name
+type Attachment struct {
+	URL      string `bson:"url"json:"url"validate:"omitempty"`
+	FileName string `bson:"fileName"json:"fileName"validate:"omitempty"`
 }
 
 //CustomFields store custome fields for article
