@@ -18,6 +18,7 @@ type Article struct {
 	Tags         []string       `bson:"tags"json:"tags"validate:"omitempty"`
 	Attachments  []Attachment   `bson:"attachments"json:"attachments"validate:"omitempty"`
 	CustomFields []CustomFields `bson:"customFields"json:"customFields"validate:"omitempty"`
+	PPC          []string       `bson:"ppc"json:"ppc"validate:"omitempty"`
 }
 
 //Attachment store link and file name
