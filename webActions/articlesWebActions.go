@@ -1,7 +1,6 @@
 package webActions
 
 import (
-	"encoding/json"
 	"knowledge-base/model"
 	"net/http"
 
@@ -20,7 +19,6 @@ func (art *ArticlesWebActions) Read(w http.ResponseWriter, r *http.Request) {
 	filter := r.URL.Query().Get("filter")
 
 	data, err := art.model.Read(filter, skip, limit)
-
 	if err != nil {
 		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
@@ -37,8 +35,7 @@ func (art *ArticlesWebActions) ReadOne(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal(data)
-		ResponseWithJSON(w, r, result, 200)
+		ResponseWithJSON(w, r, data, 200)
 	}
 }
 
@@ -65,8 +62,7 @@ func (art *ArticlesWebActions) Update(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal(data)
-		ResponseWithJSON(w, r, result, 200)
+		ResponseWithJSON(w, r, data, 200)
 	}
 }
 
@@ -80,7 +76,6 @@ func (art *ArticlesWebActions) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal("")
-		ResponseWithJSON(w, r, result, 200)
+		ResponseWithJSON(w, r, []string{""}, 200)
 	}
 }
