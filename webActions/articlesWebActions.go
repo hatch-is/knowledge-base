@@ -1,7 +1,6 @@
 package webActions
 
 import (
-	"encoding/json"
 	"knowledge-base/model"
 	"net/http"
 
@@ -20,12 +19,10 @@ func (art *ArticlesWebActions) Read(w http.ResponseWriter, r *http.Request) {
 	filter := r.URL.Query().Get("filter")
 
 	data, err := art.model.Read(filter, skip, limit)
-
 	if err != nil {
-		ErrorWithJSON(w, err.Error(), 404)
+		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal(data)
-		ResponseWithJSON(w, result, 200)
+		ResponseWithJSON(w, r, data, 200)
 	}
 }
 
@@ -36,10 +33,9 @@ func (art *ArticlesWebActions) ReadOne(w http.ResponseWriter, r *http.Request) {
 	data, err := art.model.ReadOne(ID)
 
 	if err != nil {
-		ErrorWithJSON(w, err.Error(), 404)
+		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal(data)
-		ResponseWithJSON(w, result, 200)
+		ResponseWithJSON(w, r, data, 200)
 	}
 }
 
@@ -50,26 +46,23 @@ func (art *ArticlesWebActions) Create(w http.ResponseWriter, r *http.Request) {
 	data, err := art.model.Create(body)
 
 	if err != nil {
-		ErrorWithJSON(w, err.Error(), 404)
+		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal(data)
-		ResponseWithJSON(w, result, 200)
+		ResponseWithJSON(w, r, data, 200)
 	}
 }
 
 //Update entry by ID
 func (art *ArticlesWebActions) Update(w http.ResponseWriter, r *http.Request) {
-
 	ID := mux.Vars(r)["id"]
 	body := r.Body
 
 	data, err := art.model.Update(ID, body)
 
 	if err != nil {
-		ErrorWithJSON(w, err.Error(), 404)
+		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal(data)
-		ResponseWithJSON(w, result, 200)
+		ResponseWithJSON(w, r, data, 200)
 	}
 }
 
@@ -81,9 +74,8 @@ func (art *ArticlesWebActions) Delete(w http.ResponseWriter, r *http.Request) {
 	err := art.model.Delete(ID)
 
 	if err != nil {
-		ErrorWithJSON(w, err.Error(), 404)
+		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
-		result, _ := json.Marshal("")
-		ResponseWithJSON(w, result, 200)
+		ResponseWithJSON(w, r, []string{""}, 200)
 	}
 }

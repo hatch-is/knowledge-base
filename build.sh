@@ -20,4 +20,3 @@ git checkout $1
 cd ../
 docker build -t $ECR_PATH:$1 ../
 docker push $ECR_PATH:$1
-
