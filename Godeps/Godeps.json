@@ -27,6 +27,11 @@
 			"Rev": "aed02d124ae4a0e94fea4541c8effd05bf0c8296"
 		},
 		{
+			"ImportPath": "github.com/gorilla/handlers",
+			"Comment": "v1.1-11-ga577578",
+			"Rev": "a5775781a543af3c6b9f5baf10995e4d14168950"
+		},
+		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Comment": "v1.1-13-g9fa818a",
 			"Rev": "9fa818a44c2bf1396a17f9d5a3c0f6dd39d2ff8e"
@@ -34,6 +39,34 @@
 		{
 			"ImportPath": "github.com/jinzhu/configor",
 			"Rev": "fb7a3183cd987802d006408fe3a4a9e1f6002ece"
+		},
+		{
+			"ImportPath": "github.com/phemmer/sawmill",
+			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
+		},
+		{
+			"ImportPath": "github.com/phemmer/sawmill/event",
+			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
+		},
+		{
+			"ImportPath": "github.com/phemmer/sawmill/event/formatter",
+			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
+		},
+		{
+			"ImportPath": "github.com/phemmer/sawmill/handler/filter",
+			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
+		},
+		{
+			"ImportPath": "github.com/phemmer/sawmill/handler/syslog",
+			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
+		},
+		{
+			"ImportPath": "github.com/phemmer/sawmill/handler/writer",
+			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "8e06e8ddd9629eb88639aba897641bff8031f1d3"
 		},
 		{
 			"ImportPath": "gopkg.in/go-playground/validator.v9",
