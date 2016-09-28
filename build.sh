@@ -16,6 +16,7 @@ GIT=git@github.com:hatch-is/knowledge-base.git
 rm -rf ./_build/.cache/
 git clone $GIT ./_build/.cache/knowledge-base
 cd ./_build/.cache/knowledge-base
+git tag
 git checkout $1
 cd ../
 docker build -t $ECR_PATH:$1 ../
