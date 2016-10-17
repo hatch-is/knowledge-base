@@ -13,5 +13,6 @@ func main() {
 	routes := routes.CreateRoutes()
 	router := router.NewHatchRouter(routes)
 	loggerRouter := handlers.CombinedLoggingHandler(os.Stdout, router)
+
 	http.ListenAndServe(":3810", loggerRouter)
 }
