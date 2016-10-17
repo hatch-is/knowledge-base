@@ -19,6 +19,8 @@ type Article struct {
 	Attachments  []Attachment   `bson:"attachments"json:"attachments"validate:"omitempty"`
 	CustomFields []CustomFields `bson:"customFields"json:"customFields"validate:"omitempty"`
 	PCC          []string       `bson:"pcc"json:"pcc"validate:"omitempty"`
+	CreatedBy    string         `bson:"createdBy"json:"createdBy"validate:"omitempty"`
+	ModifiedBy   string         `bson:"modifiedBy"json:"modifiedBy"validate:"omitempty"`
 }
 
 //Attachment store link and file name
@@ -123,6 +125,9 @@ func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (err erro
 			"tags":         entry.Tags,
 			"attachments":  entry.Attachments,
 			"customFields": entry.CustomFields,
+			"pcc":          entry.PCC,
+			"createdBy":    entry.CreatedBy,
+			"modifiedBy":   entry.ModifiedBy,
 		},
 	}
 
