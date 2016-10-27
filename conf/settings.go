@@ -14,6 +14,7 @@ var Config = struct {
 	SENTRY struct {
 		DNS string
 	}
+	VERBOSE string
 }{}
 
 func init() {
