@@ -2,6 +2,7 @@ package webActions
 
 import (
 	"encoding/json"
+	"hatch-mcs/conf"
 	"net/http"
 
 	"github.com/getsentry/raven-go"
@@ -12,7 +13,9 @@ import (
 func ResponseWithJSON(w http.ResponseWriter, r *http.Request, data interface{}, code int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(code)
-	sm.Info(getUlrForLog(r), data)
+	if conf.Config.VERBOSE == "true" {
+		sm.Info(getUlrForLog(r), data)
+	}
 	result, _ := json.Marshal(data)
 	w.Write(result)
 }
