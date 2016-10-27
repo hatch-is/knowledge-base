@@ -2,7 +2,7 @@ package webActions
 
 import (
 	"encoding/json"
-	"hatch-mcs/conf"
+	"knowledge-base/conf"
 	"net/http"
 
 	"github.com/getsentry/raven-go"
