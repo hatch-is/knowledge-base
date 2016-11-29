@@ -1,18 +1,36 @@
 package main
 
 import (
-	"knowledge-base/router"
-	"knowledge-base/routes"
-	"net/http"
-	"os"
+	"knowledge-base/controllers"
+	"knowledge-base/db"
 
-	"github.com/gorilla/handlers"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	routes := routes.CreateRoutes()
-	router := router.NewHatchRouter(routes)
-	loggerRouter := handlers.CombinedLoggingHandler(os.Stdout, router)
+	r := gin.Default()
+	db.Init()
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"Message": "Hello and welcome to the Hatch Knowledge Base"})
+	})
+	knowledge := r.Group("/knowledge")
+	{
+		knowledge.GET("/ping", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"Message": "pong",
+			})
+		})
 
-	http.ListenAndServe(":3810", loggerRouter)
+		article := new(controllers.ArticleController)
+
+		knowledge.POST("/articles", article.Create)
+		knowledge.GET("/articles", article.Read)
+		knowledge.GET("/articles/:id", article.ReadOne)
+		knowledge.DELETE("articles/:id", article.Delete)
+		knowledge.PUT("articles/:id", article.Update)
+
+		tags := new(controllers.TagsController)
+		knowledge.GET("/tags", tags.All)
+	}
+	r.Run()
 }
