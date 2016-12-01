@@ -3,6 +3,7 @@ package webActions
 import (
 	"knowledge-base/model"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -14,11 +15,11 @@ type ArticlesWebActions struct {
 
 //Read get all articles
 func (art *ArticlesWebActions) Read(w http.ResponseWriter, r *http.Request) {
-	skip := r.URL.Query().Get("skip")
-	limit := r.URL.Query().Get("limit")
 	filter := r.URL.Query().Get("filter")
 
-	data, err := art.model.Read(filter, skip, limit)
+	data, total, left, err := art.model.Read(filter)
+	w.Header().Set("X-Total-Count", strconv.Itoa(total))
+	w.Header().Set("X-RateLimit-Remaining", strconv.Itoa(left))
 	if err != nil {
 		ErrorWithJSON(w, r, err.Error(), 404)
 	} else {
