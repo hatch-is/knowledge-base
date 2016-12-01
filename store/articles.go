@@ -68,6 +68,9 @@ func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit
 		return
 	}
 	left = total - (skip + count)
+	if left < 0 {
+		left = 0
+	}
 	return result, total, left, nil
 }
 
@@ -189,6 +192,9 @@ func (art *ArticlesCollection) Search(q bson.M, skip int, limit int) (result []A
 		return
 	}
 	left = total - (skip + count)
+	if left < 0 {
+		left = 0
+	}
 	if err != nil {
 		return
 	}
