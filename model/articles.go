@@ -15,35 +15,26 @@ import (
 type ArticlesModel struct{}
 
 //Read get articles
-func (artModel *ArticlesModel) Read(qFilter string, qSkip string, qLimit string) (result []store.Article, err error) {
+func (artModel *ArticlesModel) Read(qFilter string) (result []store.Article, total int, left int, err error) {
 	artDb := store.ArticlesCollectionConnect()
 
 	query, isSort, err := artModel.convertFilter(qFilter)
 	if err != nil {
 		return
 	}
+	skip, limit := getSkipLimit(qFilter)
 	query["deleted"] = false
 	if isSort == false {
-
 		fields := bson.M{}
-
-		skip, err := strconv.Atoi(qSkip)
-		if err != nil {
-			skip = 0
-		}
-		limit, err := strconv.Atoi(qLimit)
-		if err != nil {
-			limit = 0
-		}
-		result, err = artDb.Read(query, fields, skip, limit)
+		result, total, left, err = artDb.Read(query, fields, skip, limit)
 	} else {
-		result, err = artDb.Search(query)
+		result, total, left, err = artDb.Search(query, skip, limit)
 	}
 
 	if err != nil {
 		return
 	}
-	return result, nil
+	return result, total, left, nil
 }
 
 //ReadOne get article by ID
@@ -171,4 +162,28 @@ func (artModel *ArticlesModel) Delete(qID string) (err error) {
 	err = artDb.Delete(ID)
 
 	return
+}
+
+func getSkipLimit(filter string) (skip int, limit int) {
+	if filter != "" {
+		jParser, err := gabs.ParseJSON([]byte(filter))
+		if err != nil {
+			return
+		}
+
+		if s := jParser.Exists("skip"); s == true {
+			sTmp, ok := jParser.Path("skip").Data().(string)
+			if ok == true {
+				skip, _ = strconv.Atoi(sTmp)
+			}
+		}
+
+		if l := jParser.Exists("limit"); l == true {
+			lTmp, ok := jParser.Path("limit").Data().(string)
+			if ok == true {
+				limit, _ = strconv.Atoi(lTmp)
+			}
+		}
+	}
+	return skip, limit
 }

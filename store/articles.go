@@ -51,7 +51,7 @@ func ArticlesCollectionConnect() *ArticlesCollection {
 }
 
 //Read return entries of Articles collections
-func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit int) (result []Article, err error) {
+func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit int) (result []Article, total int, left int, err error) {
 	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
 	if err != nil {
 		return
@@ -59,12 +59,16 @@ func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit
 	defer session.Close()
 	result = make([]Article, 0)
 	err = artCollection.Find(query).Select(fields).Skip(skip).Limit(limit).All(&result)
-
 	if err != nil {
 		return
 	}
-
-	return result, nil
+	count := len(result)
+	total, err = artCollection.Find(query).Count()
+	if err != nil {
+		return
+	}
+	left = total - (skip + count)
+	return result, total, left, nil
 }
 
 //ReadOne return one enrty of Articles collection by query
@@ -161,7 +165,7 @@ func (art *ArticlesCollection) Delete(ID bson.ObjectId) (err error) {
 }
 
 //Search implement full-text search
-func (art *ArticlesCollection) Search(q bson.M) (result []Article, err error) {
+func (art *ArticlesCollection) Search(q bson.M, skip int, limit int) (result []Article, total int, left int, err error) {
 	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
 	if err != nil {
 		return
@@ -175,10 +179,19 @@ func (art *ArticlesCollection) Search(q bson.M) (result []Article, err error) {
 	}
 	sort := "$textScore:score"
 	result = make([]Article, 0)
-	err = artCollection.Find(q).Select(fields).Sort(sort).All(&result)
+	err = artCollection.Find(q).Select(fields).Sort(sort).Skip(skip).Limit(limit).All(&result)
+	if err != nil {
+		return
+	}
+	count := len(result)
+	total, err = artCollection.Find(q).Select(fields).Sort(sort).Count()
+	if err != nil {
+		return
+	}
+	left = total - (skip + count)
 	if err != nil {
 		return
 	}
 
-	return result, nil
+	return result, total, left, nil
 }
