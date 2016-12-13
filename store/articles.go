@@ -8,31 +8,17 @@ import (
 
 //Article store article
 type Article struct {
-	ID           bson.ObjectId  `bson:"_id,omitempty"json:"id"`
-	Deleted      bool           `bson:"deleted"json:"deleted"validate:"omitempty"`
-	Subject      string         `bson:"subject"json:"subject"validate:"required,min=2,max=160"`
-	Body         string         `bson:"body"json:"body"validate:"required"`
-	Summary      string         `bson:"summary"json:"summary"validate:"omitempty,min=2,max=300"`
-	CreatedDate  time.Time      `bson:"createdDate"json:"createdDate"`
-	ModifiedDate time.Time      `bson:"modifiedDate"json:"modifiedDate"`
-	Tags         []string       `bson:"tags"json:"tags"validate:"omitempty"`
-	Attachments  []Attachment   `bson:"attachments"json:"attachments"validate:"omitempty"`
-	CustomFields []CustomFields `bson:"customFields"json:"customFields"validate:"omitempty"`
-	PCC          []string       `bson:"pcc"json:"pcc"validate:"omitempty"`
-	CreatedBy    string         `bson:"createdBy"json:"createdBy"validate:"omitempty"`
-	ModifiedBy   string         `bson:"modifiedBy"json:"modifiedBy"validate:"omitempty"`
-}
-
-//Attachment store link and file name
-type Attachment struct {
-	URL      string `bson:"url"json:"url"validate:"omitempty"`
-	FileName string `bson:"fileName"json:"fileName"validate:"omitempty"`
-}
-
-//CustomFields store custome fields for article
-type CustomFields struct {
-	Key   string `bson:"key"json:"key"validate:"omitempty"`
-	Value string `bson:"value"json:"value"validate:"omitempty"`
+	ID           bson.ObjectId `bson:"_id,omitempty"json:"id"`
+	Deleted      bool          `bson:"deleted"json:"deleted"validate:"omitempty"`
+	Subject      string        `bson:"subject"json:"subject"validate:"required,min=2,max=160"`
+	Body         string        `bson:"body"json:"body"validate:"required"`
+	Summary      string        `bson:"summary"json:"summary"validate:"omitempty,min=2,max=300"`
+	CreatedDate  time.Time     `bson:"createdDate"json:"createdDate"`
+	ModifiedDate time.Time     `bson:"modifiedDate"json:"modifiedDate"`
+	Tags         []string      `bson:"tags"json:"tags"validate:"omitempty"`
+	PCC          []string      `bson:"pcc"json:"pcc"validate:"omitempty"`
+	CreatedBy    string        `bson:"createdBy"json:"createdBy"validate:"omitempty"`
+	ModifiedBy   string        `bson:"modifiedBy"json:"modifiedBy"validate:"omitempty"`
 }
 
 //ArticlesCollection connection to DB
@@ -130,8 +116,6 @@ func (art *ArticlesCollection) Update(ID bson.ObjectId, entry Article) (err erro
 			"summary":      entry.Summary,
 			"modifiedDate": entry.ModifiedDate,
 			"tags":         entry.Tags,
-			"attachments":  entry.Attachments,
-			"customFields": entry.CustomFields,
 			"pcc":          entry.PCC,
 			"createdBy":    entry.CreatedBy,
 			"modifiedBy":   entry.ModifiedBy,
