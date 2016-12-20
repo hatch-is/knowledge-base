@@ -57,6 +57,7 @@ func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit
 		return
 	}
 	defer session.Close()
+	query = checkUpdated(query)
 	result = make([]Article, 0)
 	err = artCollection.Find(query).Select(fields).Skip(skip).Limit(limit).All(&result)
 	if err != nil {
@@ -174,7 +175,7 @@ func (art *ArticlesCollection) Search(q bson.M, skip int, limit int) (result []A
 		return
 	}
 	defer session.Close()
-
+	q = checkUpdated(q)
 	fields := bson.M{
 		"score": bson.M{
 			"$meta": "textScore",
