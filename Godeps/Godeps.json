@@ -65,6 +65,18 @@
 			"Rev": "e2451da4038ffc82c6e474b0f22ffbc4105e478b"
 		},
 		{
+			"ImportPath": "github.com/pquerna/ffjson/ffjson",
+			"Rev": "a29c662791e4de7fc53a6cf209c9af657bba96f3"
+		},
+		{
+			"ImportPath": "github.com/pquerna/ffjson/fflib/v1",
+			"Rev": "a29c662791e4de7fc53a6cf209c9af657bba96f3"
+		},
+		{
+			"ImportPath": "github.com/pquerna/ffjson/fflib/v1/internal",
+			"Rev": "a29c662791e4de7fc53a6cf209c9af657bba96f3"
+		},
+		{
 			"ImportPath": "golang.org/x/crypto/ssh/terminal",
 			"Rev": "8e06e8ddd9629eb88639aba897641bff8031f1d3"
 		},
