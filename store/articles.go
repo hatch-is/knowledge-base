@@ -51,7 +51,7 @@ func ArticlesCollectionConnect() *ArticlesCollection {
 }
 
 //Read return entries of Articles collections
-func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit int) (result []Article, total int, left int, err error) {
+func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit int, sort []string) (result []Article, total int, left int, err error) {
 	session, artCollection, err := art.conn.getSessionAndCollection(art.collection)
 	if err != nil {
 		return
@@ -59,7 +59,7 @@ func (art *ArticlesCollection) Read(query bson.M, fields bson.M, skip int, limit
 	defer session.Close()
 	query = checkUpdated(query)
 	result = make([]Article, 0)
-	err = artCollection.Find(query).Select(fields).Skip(skip).Limit(limit).All(&result)
+	err = artCollection.Find(query).Select(fields).Skip(skip).Limit(limit).Sort(sort...).All(&result)
 	if err != nil {
 		return
 	}
