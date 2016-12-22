@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"knowledge-base/filter"
 	"knowledge-base/store"
 	"strconv"
 
@@ -17,18 +18,15 @@ type ArticlesModel struct{}
 //Read get articles
 func (artModel *ArticlesModel) Read(qFilter string) (result []store.Article, total int, left int, err error) {
 	artDb := store.ArticlesCollectionConnect()
+	result = make([]store.Article, 0)
 
-	query, isSort, err := artModel.convertFilter(qFilter)
-	if err != nil {
-		return
-	}
-	skip, limit := getSkipLimit(qFilter)
-	query["deleted"] = false
-	if isSort == false {
+	f := filter.GetFilterData(qFilter, store.Article{})
+
+	if f.GetSearch() == "" {
 		fields := bson.M{}
-		result, total, left, err = artDb.Read(query, fields, skip, limit)
+		result, total, left, err = artDb.Read(f.GetQuery(), fields, f.GetSkip(), f.GetLimit(), f.GetSort())
 	} else {
-		result, total, left, err = artDb.Search(query, skip, limit)
+		result, total, left, err = artDb.Search(f.GetQuery(), f.GetSkip(), f.GetLimit())
 	}
 
 	if err != nil {

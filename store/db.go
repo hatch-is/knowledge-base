@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	//"gopkg.in/mgo.v2/bson"
 	"knowledge-base/conf"
 )
@@ -58,4 +59,13 @@ func (c *MongoConnection) getSessionAndCollection(collectionName string) (sessio
 		err = errors.New("No original session found")
 	}
 	return
+}
+
+func checkUpdated(q bson.M) bson.M {
+	if q == nil {
+		q = bson.M{"deleted": false}
+	} else if q["deleted"] == nil {
+		q["deleted"] = false
+	}
+	return q
 }
