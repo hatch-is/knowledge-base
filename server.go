@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/handlers"
+	"knowledge-base/conf"
 )
 
 func main() {
@@ -14,5 +15,11 @@ func main() {
 	router := router.NewHatchRouter(routes)
 	loggerRouter := handlers.CombinedLoggingHandler(os.Stdout, router)
 
-	http.ListenAndServe(":3810", loggerRouter)
+	port := conf.Config.PORT
+	if port == "" {
+		port = "3810"
+	}
+	port = ":" + port
+
+	http.ListenAndServe(port, loggerRouter)
 }

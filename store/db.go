@@ -54,7 +54,12 @@ func (c *MongoConnection) CloseConnection() {
 func (c *MongoConnection) getSessionAndCollection(collectionName string) (session *mgo.Session, collection *mgo.Collection, err error) {
 	if c.originalSession != nil {
 		session = c.originalSession.Copy()
-		collection = session.DB(conf.Config.DB.Name).C(collectionName)
+		dbName := conf.Config.DB.Name
+		if conf.Config.LocationGroup != "" {
+			dbName = dbName + "-" + conf.Config.LocationGroup
+		}
+
+		collection = session.DB(dbName).C(collectionName)
 	} else {
 		err = errors.New("No original session found")
 	}

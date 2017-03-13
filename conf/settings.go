@@ -15,6 +15,8 @@ var Config = struct {
 		DNS string
 	}
 	VERBOSE string
+	LocationGroup string
+	PORT string
 }{}
 
 func init() {
